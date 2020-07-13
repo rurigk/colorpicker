@@ -22,6 +22,10 @@
   <property name="windowTitle">
    <string>ColorPanel</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="colorpicker.qrc">
+    <normaloff>:/images/tray-icon.png</normaloff>:/images/tray-icon.png</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">background-color: transparent;
 border-radius: 6px;</string>
@@ -236,6 +240,9 @@ background-repeat: no-repeat;</string>
                 </item>
                 <item>
                  <widget class="QPushButton" name="toolbarHistoryColor6">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">width: 30px;
 height: 30px;
@@ -251,6 +258,9 @@ background-repeat: no-repeat;</string>
                 </item>
                 <item>
                  <widget class="QPushButton" name="toolbarHistoryColor7">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">width: 30px;
 height: 30px;
@@ -675,6 +685,8 @@ border: 1px solid #CCC;</string>
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="colorpicker.qrc"/>
+ </resources>
  <connections/>
 </ui>

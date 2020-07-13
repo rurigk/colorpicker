@@ -53,6 +53,21 @@ ColorPanel::ColorPanel(QWidget *parent)
 
     FillHistory();
     FillToolbarHistory();
+
+    int toolbarButtonIndex = 0;
+    connect(ui->toolbarHistoryColor1, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
+    toolbarButtonIndex++;
+    connect(ui->toolbarHistoryColor2, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
+    toolbarButtonIndex++;
+    connect(ui->toolbarHistoryColor3, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
+    toolbarButtonIndex++;
+    connect(ui->toolbarHistoryColor4, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
+    toolbarButtonIndex++;
+    connect(ui->toolbarHistoryColor5, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
+    toolbarButtonIndex++;
+    connect(ui->toolbarHistoryColor6, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
+    toolbarButtonIndex++;
+    connect(ui->toolbarHistoryColor7, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
 }
 
 ColorPanel::~ColorPanel()
@@ -165,6 +180,18 @@ void ColorPanel::ColorPickedFromHistory(QColor color)
     QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(color.name(QColor::HexRgb).toUpper());
     ShowNotification("Color copied to clipboard", color.name(QColor::HexRgb));
+}
+
+void ColorPanel::ColorPickedFromToolbar(int index)
+{
+    if(colorPickerHistory->history->count() - 1 >= index)
+    {
+        qDebug() << (colorPickerHistory->history->count()-1) - index;
+        QColor color = colorPickerHistory->history->at((colorPickerHistory->history->count()-1) - index);
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setText(color.name(QColor::HexRgb).toUpper());
+        ShowNotification("Color copied to clipboard", color.name(QColor::HexRgb));
+    }
 }
 
 void ColorPanel::ColorHoveredFromHistory(QColor color)

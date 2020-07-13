@@ -43,6 +43,7 @@ private slots:
     void ColorPickedFromHistory(QColor color);
     void ColorHoveredFromHistory(QColor color);
     void ColorUnhoveredFromHistory();
+    void ColorPickedFromToolbar(int index);
 
 private:
     Ui::ColorPanel *ui;

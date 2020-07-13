@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/tray.png</file>
+        <file>images/outline.png</file>
+        <file>images/eye-slash.png</file>
+        <file>images/window-maximize.png</file>
+        <file>images/eye-dropper.png</file>
+        <file>images/tray-icon.png</file>
+        <file>images/cross.png</file>
+    </qresource>
+</RCC>

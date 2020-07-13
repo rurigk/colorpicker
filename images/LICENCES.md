@@ -1,0 +1,1 @@
+https://github.com/FortAwesome/Font-Awesome/blob/master/LICENSE.txt

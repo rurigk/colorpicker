@@ -10,6 +10,10 @@ ColorPanel::ColorPanel(QWidget *parent)
     setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
+    settings = new QSettings("Konkorporation", "ColorPicker");
+    int colorFormatIndex = settings->value("picker/colorformat", 0).toInt();
+    ui->colorFormatSelector->setCurrentIndex(colorFormatIndex);
+
     CreateTrayActions(); // Create tray menu actions
     CreateTrayIcon(); // Create the actual tray icon to be displayed
     connect(sysTray, &QSystemTrayIcon::activated, this, &ColorPanel::trayActivated); // This connects the events of the tray to trayActivated method
@@ -33,6 +37,14 @@ ColorPanel::ColorPanel(QWidget *parent)
     toolbarStyle->SetRule(new QString("border-top-right-radius"), new QString("6px"));
     toolbarStyle->SetRule(new QString("border-bottom-right-radius"), new QString("6px"));
     toolbarStyle->SetRule(new QString("border-bottom-left-radius"), new QString("6px"));
+
+    toolbarButtonsDefaultStyle = new StylesheetHelper();
+    toolbarButtonsDefaultStyle->SetRule(new QString("width"), new QString("30px"));
+    toolbarButtonsDefaultStyle->SetRule(new QString("height"), new QString("30px"));
+    toolbarButtonsDefaultStyle->SetRule(new QString("border"), new QString("1px solid transparent"));
+    toolbarButtonsDefaultStyle->SetRule(new QString("background-image"), new QString("url(:/images/outline.png)"));
+    toolbarButtonsDefaultStyle->SetRule(new QString("background-repeat"), new QString("no-repeat"));
+    toolbarButtonsDefaultStyle->SetRule(new QString("background-color"), new QString("transparent"));
 
     contentStyle = new StylesheetHelper();
     contentStyle->SetRule(new QString("background-color"), new QString("#EEE"));
@@ -67,8 +79,6 @@ ColorPanel::ColorPanel(QWidget *parent)
     connect(ui->toolbarHistoryColor5, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
     toolbarButtonIndex++;
     connect(ui->toolbarHistoryColor6, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
-    toolbarButtonIndex++;
-    connect(ui->toolbarHistoryColor7, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
 }
 
 ColorPanel::~ColorPanel()
@@ -156,7 +166,7 @@ void ColorPanel::ColorPicked(QColor color)
 {
 
     QClipboard *clipboard = QGuiApplication::clipboard();
-    clipboard->setText(color.name(QColor::HexRgb).toUpper());
+    clipboard->setText(GetColorString(color));
 
     for(int wIndex = 0; wIndex < pickerWindows->count(); wIndex++)
     {
@@ -172,7 +182,7 @@ void ColorPanel::ColorPicked(QColor color)
     FillHistory();
     FillToolbarHistory();
 
-    ShowNotification("Color copied to clipboard", color.name(QColor::HexRgb));
+    ShowNotification("Color copied to clipboard", GetColorString(color));
 }
 
 void ColorPanel::PickerCancelled()
@@ -186,10 +196,10 @@ void ColorPanel::PickerCancelled()
 
 void ColorPanel::ColorPickedFromHistory(QColor color)
 {
-    //qDebug() << "Picked from history: " << color.name(QColor::HexRgb);
+    //qDebug() << "Picked from history: " << GetColorString(color);
     QClipboard *clipboard = QGuiApplication::clipboard();
-    clipboard->setText(color.name(QColor::HexRgb).toUpper());
-    ShowNotification("Color copied to clipboard", color.name(QColor::HexRgb));
+    clipboard->setText(GetColorString(color));
+    ShowNotification("Color copied to clipboard", GetColorString(color));
 }
 
 void ColorPanel::ColorPickedFromToolbar(int index)
@@ -199,15 +209,15 @@ void ColorPanel::ColorPickedFromToolbar(int index)
         //qDebug() << (colorPickerHistory->history->count()-1) - index;
         QColor color = colorPickerHistory->history->at((colorPickerHistory->history->count()-1) - index);
         QClipboard *clipboard = QGuiApplication::clipboard();
-        clipboard->setText(color.name(QColor::HexRgb).toUpper());
-        ShowNotification("Color copied to clipboard", color.name(QColor::HexRgb));
+        clipboard->setText(GetColorString(color));
+        ShowNotification("Color copied to clipboard", GetColorString(color));
     }
 }
 
 void ColorPanel::ColorHoveredFromHistory(QColor color)
 {
-    //qDebug() << "Hovered from history: " << color.name(QColor::HexRgb);
-    ui->colorLabel->setText(color.name(QColor::HexRgb));
+    //qDebug() << "Hovered from history: " << GetColorString(color);
+    ui->colorLabel->setText(GetColorString(color));
 }
 
 void ColorPanel::ColorUnhoveredFromHistory()
@@ -219,7 +229,7 @@ void ColorPanel::UpdateWindowMode()
 {
     if(toolbarMode)
     {
-        resize(410, 40);
+        resize(450, 40);
         toolbarStyle->SetRule(new QString("border-top-left-radius"), new QString("6px"));
         toolbarStyle->SetRule(new QString("border-top-right-radius"), new QString("6px"));
         toolbarStyle->SetRule(new QString("border-bottom-right-radius"), new QString("6px"));
@@ -315,6 +325,14 @@ void ColorPanel::FillHistory()
 
 void ColorPanel::FillToolbarHistory()
 {
+    QString defaultStyle = toolbarButtonsDefaultStyle->BuildStylesheet();
+    ui->toolbarHistoryColor1->setStyleSheet(defaultStyle);
+    ui->toolbarHistoryColor2->setStyleSheet(defaultStyle);
+    ui->toolbarHistoryColor3->setStyleSheet(defaultStyle);
+    ui->toolbarHistoryColor4->setStyleSheet(defaultStyle);
+    ui->toolbarHistoryColor5->setStyleSheet(defaultStyle);
+    ui->toolbarHistoryColor6->setStyleSheet(defaultStyle);
+
     int historyCount = colorPickerHistory->history->count();
     for (int i = historyCount - 1; i >= 0; i--) {
         StylesheetHelper * buttonStyle = new StylesheetHelper();
@@ -324,7 +342,7 @@ void ColorPanel::FillToolbarHistory()
 
         QColor currentColor = colorPickerHistory->history->at(i);
         buttonStyle->SetRule(new QString("background-color"), new QString(currentColor.name(QColor::HexRgb)));
-        buttonStyle->SetRule(new QString("border"), new QString("1px solid "+currentColor.name(QColor::HexRgb)));
+        buttonStyle->SetRule(new QString("border"), new QString("1px solid " + currentColor.name(QColor::HexRgb)));
         int buttonIndex = (historyCount - 1) - i;
         switch (buttonIndex) {
             case 0:
@@ -345,9 +363,6 @@ void ColorPanel::FillToolbarHistory()
             case 5:
                 ui->toolbarHistoryColor6->setStyleSheet(buttonStyle->BuildStylesheet());
             break;
-            case 6:
-                ui->toolbarHistoryColor7->setStyleSheet(buttonStyle->BuildStylesheet());
-            break;
             default:
                 return;
         }
@@ -357,4 +372,77 @@ void ColorPanel::FillToolbarHistory()
 void ColorPanel::ShowNotification(QString title, QString message)
 {
     sysTray->showMessage(title, message, QSystemTrayIcon::Information, 2000);
+}
+
+QString ColorPanel::GetColorString(QColor color)
+{
+    int colorFormat = ui->colorFormatSelector->currentIndex();
+    switch(colorFormat)
+    {
+        case 0: // HEX
+            return color.name(QColor::HexRgb).toUpper();
+        case 1: // RGB
+        {
+            QString str = "rgb(" +
+            QString::number( color.red() ) + ", " +
+            QString::number( color.green() ) + ", " +
+            QString::number( color.blue() ) + ")";
+            return str;
+        }
+        case 2: // HSV
+        {
+            QString str = "hsv(" +
+            QString::number( color.hsvHue() ) + "º, " +
+            QString::number( (int)round(((float)color.hsvSaturation() / (float)255) * (float)100) ) + "%, " +
+            QString::number( (int)round(((float)color.value() / (float)255) * (float)100) ) + "%)";
+            return str;
+        }
+        case 3: // HSL
+        {
+            QString str = "hsl(" +
+            QString::number( color.hslHue() ) + ", " +
+            QString::number( (int)round(((float)color.hslSaturation() / (float)255) * (float)100) ) + "%, " +
+            QString::number( (int)round(((float)color.lightness() / (float)255) * (float)100) ) + "%)";
+            return str;
+        }
+        case 4: // CMYK
+        {
+            QString str = "cmyk(" +
+            QString::number( (int)round(((float)color.cyan() / (float)255) * (float)100) ) + "%, " +
+            QString::number( (int)round(((float)color.magenta() / (float)255) * (float)100) ) + "%, " +
+            QString::number( (int)round(((float)color.yellow() / (float)255) * (float)100) ) + "%, " +
+            QString::number( (int)round(((float)color.black() / (float)255) * (float)100) ) + "%)";
+            return str;
+        }
+        default:
+            return color.name(QColor::HexRgb);
+    }
+}
+
+void ColorPanel::on_stayOnTopButton_toggled(bool checked)
+{
+    if(checked)
+    {
+        setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+        show();
+    }
+    else
+    {
+        setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+        show();
+    }
+}
+
+
+void ColorPanel::on_clearHistoryButton_clicked()
+{
+    colorPickerHistory->Clear();
+    FillHistory();
+    FillToolbarHistory();
+    colorPickerHistory->SaveHistory();
+}
+
+void ColorPanel::on_colorFormatSelector_currentIndexChanged(int index)
+{
+    settings->setValue("picker/colorformat", index);
 }

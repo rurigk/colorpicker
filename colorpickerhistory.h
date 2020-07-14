@@ -21,6 +21,7 @@ public:
     void LoadHistory();
     void PushToHistory(QColor color);
     void SaveHistory();
+    void Clear();
 private:
     int historyMaxLenght = 49;
 };

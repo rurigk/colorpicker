@@ -92,6 +92,8 @@ void ColorPicker::mousePressEvent(QMouseEvent *event)
     }
     else
     {
+        backgroundPixmap = emptyPixmap;
+        mousePos = new QPoint(-1, -1);
         PickerCancelled();
     }
 }
@@ -110,6 +112,7 @@ void ColorPicker::leaveEvent(QEvent *)
 
 void ColorPicker::EscapeKeyPressed()
 {
-    qDebug() << "Escpressed";
+    backgroundPixmap = emptyPixmap;
+    mousePos = new QPoint(-1, -1);
     PickerCancelled();
 }

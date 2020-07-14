@@ -17,6 +17,7 @@
 #include <QPushButton>
 #include <QSizePolicy>
 #include <QSpacerItem>
+#include <QSettings>
 #include "colorpicker.h"
 #include "stylesheethelper.h"
 #include "colorpickerhistory.h"
@@ -46,9 +47,17 @@ private slots:
     void ColorPickedFromToolbar(int index);
     void PickerCancelled();
 
+    void on_stayOnTopButton_toggled(bool checked);
+
+    void on_clearHistoryButton_clicked();
+
+    void on_colorFormatSelector_currentIndexChanged(int index);
+
 private:
     Ui::ColorPanel *ui;
     
+    QSettings * settings;
+
     QSystemTrayIcon *sysTray;
     QAction *openAction;
     QAction *quitAction;
@@ -59,6 +68,7 @@ private:
     ColorPickerHistory * colorPickerHistory;
 
     StylesheetHelper* toolbarStyle;
+    StylesheetHelper* toolbarButtonsDefaultStyle;
     StylesheetHelper* contentStyle;
 
     bool toolbarMode = true;
@@ -73,5 +83,6 @@ private:
     void FillHistory();
     void FillToolbarHistory();
     void ShowNotification(QString title, QString message);
+    QString GetColorString(QColor color);
 };
 #endif // COLORPANEL_H

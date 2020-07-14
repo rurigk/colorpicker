@@ -60,3 +60,9 @@ void ColorPickerHistory::PushToHistory(QColor color)
     }
     SaveHistory();
 }
+
+void ColorPickerHistory::Clear()
+{
+    history->clear();
+    history = new QList<QColor>();
+}

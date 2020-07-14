@@ -257,24 +257,6 @@ background-repeat: no-repeat;</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="toolbarHistoryColor7">
-                  <property name="cursor">
-                   <cursorShape>PointingHandCursor</cursorShape>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">width: 30px;
-height: 30px;
-border: 1px solid transparent;
-background-image: url(:/images/outline.png);
-background-color: transparent;
-background-repeat: no-repeat;</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
                  <spacer name="toolbarSpacer">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -337,6 +319,72 @@ background-repeat: no-repeat;</string>
                  </widget>
                 </item>
                 <item>
+                 <spacer name="horizontalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>10</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="colorFormatSelector">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>70</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: #FFF;
+border: 1px solid #555;
+height: 20px;
+border-radius: 0px;</string>
+                  </property>
+                  <property name="currentIndex">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>HEX</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>RGB</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>HSV</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>HSL</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>CMYK</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item>
                  <spacer name="horizontalSpacer">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -369,6 +417,45 @@ background-repeat: no-repeat;</string>
              </property>
              <property name="text">
               <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="stayOnTopButton">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">width: 30px;
+height: 30px;
+border: 1px solid transparent;
+background-color: transparent;
+background-repeat: no-repeat;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normalon>:/images/thumbtack-active.png</normalon>
+               <disabledon>:/images/thumbtack-active.png</disabledon>
+               <activeoff>:/images/thumbtack.png</activeoff>
+               <activeon>:/images/thumbtack-active.png</activeon>
+               <selectedoff>:/images/thumbtack.png</selectedoff>
+               <selectedon>:/images/thumbtack-active.png</selectedon>
+              </iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -568,6 +655,50 @@ border: 1px solid #CCC;</string>
                        </property>
                       </widget>
                      </item>
+                     <item>
+                      <widget class="QPushButton" name="clearHistoryButton">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="cursor">
+                        <cursorShape>PointingHandCursor</cursorShape>
+                       </property>
+                       <property name="toolTip">
+                        <string>Clear history</string>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">width: 30px;
+height: 30px;
+border: 1px solid transparent;
+background-image: url(:/images/trash.png);
+background-color: transparent;
+background-repeat: no-repeat;
+color: white;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <spacer name="horizontalSpacer_2">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>12</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
                     </layout>
                    </item>
                   </layout>
@@ -603,6 +734,9 @@ border: 1px solid #CCC;</string>
                <layout class="QHBoxLayout" name="contentWidgetSectionsLayout">
                 <item>
                  <widget class="QScrollArea" name="scrollArea">
+                  <property name="toolTip">
+                   <string/>
+                  </property>
                   <property name="verticalScrollBarPolicy">
                    <enum>Qt::ScrollBarAsNeeded</enum>
                   </property>
@@ -621,7 +755,7 @@ border: 1px solid #CCC;</string>
                      <x>0</x>
                      <y>0</y>
                      <width>473</width>
-                     <height>360</height>
+                     <height>356</height>
                     </rect>
                    </property>
                    <property name="sizePolicy">
@@ -644,7 +778,7 @@ border: 1px solid #CCC;</string>
                      <x>0</x>
                      <y>0</y>
                      <width>473</width>
-                     <height>360</height>
+                     <height>356</height>
                     </rect>
                    </property>
                    <property name="sizePolicy">

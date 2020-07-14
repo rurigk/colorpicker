@@ -20,6 +20,7 @@ ColorPanel::ColorPanel(QWidget *parent)
     {
         ColorPicker *colorPicker = new ColorPicker();
         connect(colorPicker, &ColorPicker::ColorPicked, this, &ColorPanel::ColorPicked);
+        connect(colorPicker, &ColorPicker::PickerCancelled, this, &ColorPanel::PickerCancelled);
         colorPicker->setMouseTracking(true);
         pickerWindows->push_back(colorPicker);
     }
@@ -174,6 +175,15 @@ void ColorPanel::ColorPicked(QColor color)
     ShowNotification("Color copied to clipboard", color.name(QColor::HexRgb));
 }
 
+void ColorPanel::PickerCancelled()
+{
+    for(int wIndex = 0; wIndex < pickerWindows->count(); wIndex++)
+    {
+        ColorPicker *picker = pickerWindows->at(wIndex);
+        picker->hide();
+    }
+}
+
 void ColorPanel::ColorPickedFromHistory(QColor color)
 {
     //qDebug() << "Picked from history: " << color.name(QColor::HexRgb);
@@ -186,7 +196,7 @@ void ColorPanel::ColorPickedFromToolbar(int index)
 {
     if(colorPickerHistory->history->count() - 1 >= index)
     {
-        qDebug() << (colorPickerHistory->history->count()-1) - index;
+        //qDebug() << (colorPickerHistory->history->count()-1) - index;
         QColor color = colorPickerHistory->history->at((colorPickerHistory->history->count()-1) - index);
         QClipboard *clipboard = QGuiApplication::clipboard();
         clipboard->setText(color.name(QColor::HexRgb).toUpper());

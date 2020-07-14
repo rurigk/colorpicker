@@ -44,6 +44,7 @@ private slots:
     void ColorHoveredFromHistory(QColor color);
     void ColorUnhoveredFromHistory();
     void ColorPickedFromToolbar(int index);
+    void PickerCancelled();
 
 private:
     Ui::ColorPanel *ui;

@@ -4,6 +4,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
+VERSION = 0.3.0.0
+QMAKE_TARGET_COMPANY = Rurigk
+QMAKE_TARGET_PRODUCT = ColorPicker
+QMAKE_TARGET_DESCRIPTION = Desktop color picker
+QMAKE_TARGET_COPYRIGHT = LGPLv3
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the

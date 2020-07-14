@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QColor>
+#include <QShortcut>
 
 namespace Ui {
     class ColorPicker;
@@ -24,6 +25,7 @@ public:
 
 signals:
     void ColorPicked(QColor color);
+    void PickerCancelled();
 
 private:
     Ui::ColorPicker *ui;
@@ -31,7 +33,9 @@ private:
     void mouseMoveEvent(QMouseEvent *event);
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);
+    void EscapeKeyPressed();
     QPoint *mousePos;
+    QShortcut *shortcut;
     bool drawLens = false;
     int rectSize = 100;
     int lensRectSize = 20;

@@ -11,6 +11,8 @@ ColorPicker::ColorPicker(QWidget *parent) :
     //setWindowFlags(Qt::FramelessWindowHint| Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint | Qt::ToolTip);
     setMouseTracking(true);
     mousePos = new QPoint(-1, -1);
+    shortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
+    connect(shortcut, &QShortcut::activated, this, &ColorPicker::EscapeKeyPressed);
 }
 
 ColorPicker::~ColorPicker()
@@ -72,19 +74,26 @@ void ColorPicker::mouseMoveEvent(QMouseEvent * event)
     else
     {
         mousePos = mousePoint;
-        update((mousePos->x() - (rectSize / 2)) - 30,
-               (mousePos->y() - (rectSize / 2)) - 30,
-               rectSize + 60, rectSize + 60);
+        update((mousePos->x() - (rectSize / 2)) - 50,
+               (mousePos->y() - (rectSize / 2)) - 50,
+               rectSize + 100, rectSize + 100);
     }
 }
 
 void ColorPicker::mousePressEvent(QMouseEvent *event)
 {
-    QImage image = backgroundPixmap.toImage();
-    QColor color = image.pixel(event->pos().x(), event->pos().y());
-    ColorPicked(color);
-    backgroundPixmap = emptyPixmap;
-    mousePos = new QPoint(-1, -1);
+    if(event->button() == Qt::LeftButton)
+    {
+        QImage image = backgroundPixmap.toImage();
+        QColor color = image.pixel(event->pos().x(), event->pos().y());
+        ColorPicked(color);
+        backgroundPixmap = emptyPixmap;
+        mousePos = new QPoint(-1, -1);
+    }
+    else
+    {
+        PickerCancelled();
+    }
 }
 
 void ColorPicker::enterEvent(QEvent *)
@@ -97,4 +106,10 @@ void ColorPicker::leaveEvent(QEvent *)
 {
     drawLens = false;
     repaint();
+}
+
+void ColorPicker::EscapeKeyPressed()
+{
+    qDebug() << "Escpressed";
+    PickerCancelled();
 }

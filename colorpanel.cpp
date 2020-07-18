@@ -38,7 +38,7 @@ ColorPanel::ColorPanel(QWidget *parent)
     setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
-    settings = new QSettings("Konkorporation", "ColorPicker");
+    settings = new QSettings("Konkorp", "ColorPicker");
     int colorFormatIndex = settings->value("picker/colorformat", 0).toInt();
     ui->colorFormatSelector->setCurrentIndex(colorFormatIndex);
 

@@ -22,30 +22,30 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    colorbutton.cpp \
-    colorpicker.cpp \
-    colorpickerhistory.cpp \
-    colorpickertitlebar.cpp \
-    main.cpp \
-    colorpanel.cpp \
-    popupnotification.cpp \
-    stylesheethelper.cpp
+    src/colorbutton.cpp \
+    src/colorpicker.cpp \
+    src/colorpickerhistory.cpp \
+    src/colorpickertitlebar.cpp \
+    src/main.cpp \
+    src/colorpanel.cpp \
+    src/popupnotification.cpp \
+    src/stylesheethelper.cpp
 
 HEADERS += \
-    colorbutton.h \
-    colorpanel.h \
-    colorpicker.h \
-    colorpickerhistory.h \
-    colorpickertitlebar.h \
-    popupnotification.h \
-    stylesheethelper.h
+    src/colorbutton.h \
+    src/colorpanel.h \
+    src/colorpicker.h \
+    src/colorpickerhistory.h \
+    src/colorpickertitlebar.h \
+    src/popupnotification.h \
+    src/stylesheethelper.h
 
 FORMS += \
-    colorpanel.ui \
-    colorpicker.ui
+    src/colorpanel.ui \
+    src/colorpicker.ui
 
 TRANSLATIONS += \
-    KonkorpColorPicker_en_US.ts
+    src/KonkorpColorPicker_en_US.ts
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

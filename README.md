@@ -9,6 +9,19 @@
 
 # Konkorp Color Picker
 
+### Screenshots
+
+Toolbar mode
+
+![Toolbar mode](https://raw.githubusercontent.com/rurigk/colorpicker/master/screenshots/toolbar.png)
+
+Window mode:
+
+![Normal mode](https://raw.githubusercontent.com/rurigk/colorpicker/master/screenshots/normal.png)
+
+Picker lens:
+
+![Picker mode](https://raw.githubusercontent.com/rurigk/colorpicker/master/screenshots/picker.png)
 
 ### Download
 

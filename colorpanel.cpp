@@ -90,8 +90,6 @@ ColorPanel::ColorPanel(QWidget *parent)
     colorPickerHistory = new ColorPickerHistory();
     colorPickerHistory->LoadHistory();
 
-    historyColumns = 7;
-
     FillHistory();
     FillToolbarHistory();
 
@@ -342,8 +340,8 @@ void ColorPanel::on_pickColorButton_clicked()
 
 void ColorPanel::FillHistory()
 {
-    historyColumns = ui->scrollAreaWidgetContentsHistory->width() / (32 + 6);
-    qDebug() << "Columns: " << historyColumns << " width: " << ui->scrollAreaWidgetContentsHistory->width();
+    //historyColumns = ui->scrollAreaWidgetContentsHistory->width() / (32 + 6);
+    //qDebug() << "Columns: " << historyColumns << " width: " << ui->scrollAreaWidgetContentsHistory->geometry().width();
 
     QGridLayout * layout = new QGridLayout();
 
@@ -386,9 +384,9 @@ void ColorPanel::FillHistory()
     }
 
     QSpacerItem * spacer = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding);
-    layout->addItem(spacer, row, historyColumns+1, 1, -1, Qt::AlignTop);
+    layout->addItem(spacer, row, historyColumns-1, 1, -1, Qt::AlignTop);
 
-    delete ui->scrollAreaWidgetContentsHistory->layout();
+    //delete ui->scrollAreaWidgetContentsHistory->layout();
     qDeleteAll(ui->scrollAreaWidgetContentsHistory->children());
 
     ui->scrollAreaWidgetContentsHistory->setLayout(layout);
@@ -518,9 +516,9 @@ void ColorPanel::on_clearHistoryButton_clicked()
     switch (confirmationReturn) {
       case QMessageBox::Ok:
             colorPickerHistory->Clear();
+            colorPickerHistory->SaveHistory();
             FillHistory();
             FillToolbarHistory();
-            colorPickerHistory->SaveHistory();
           break;
       default:
           // should never be reached

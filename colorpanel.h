@@ -89,7 +89,7 @@ private:
     bool toolbarMode = true;
     bool restoreAfterPick = false;
 
-    int historyColumns;
+    int historyColumns = 15;
 
     void CreateTrayIcon();
     void CreateTrayActions();

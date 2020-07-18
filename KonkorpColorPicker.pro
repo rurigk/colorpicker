@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,6 +28,7 @@ SOURCES += \
     colorpickertitlebar.cpp \
     main.cpp \
     colorpanel.cpp \
+    popupnotification.cpp \
     stylesheethelper.cpp
 
 HEADERS += \
@@ -36,6 +37,7 @@ HEADERS += \
     colorpicker.h \
     colorpickerhistory.h \
     colorpickertitlebar.h \
+    popupnotification.h \
     stylesheethelper.h
 
 FORMS += \

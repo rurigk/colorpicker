@@ -9,6 +9,11 @@ int main(int argc, char *argv[])
     QApplication::setQuitOnLastWindowClosed(false);
 
     ColorPanel w;
-    w.show();
+    if(w.exitApp)
+    {
+        w.close();
+        return 0;
+    }
+    //w.show();
     return a.exec();
 }

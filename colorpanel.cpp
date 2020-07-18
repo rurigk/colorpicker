@@ -5,7 +5,35 @@ ColorPanel::ColorPanel(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ColorPanel)
 {
+    client = new QLocalSocket();
+    server = new QLocalServer();
+
+    client->setServerName("KonkorpColorPicker");
+    if (!client->open()) {
+         qDebug() << "Cannot connect to server";
+         qDebug() << "Creating a server";
+
+         connect(server, SIGNAL(newConnection()), this, SLOT(OnNewClientConnection()));
+
+         if (!server->listen("KonkorpColorPicker")) {
+             qDebug() << "Cannot create a server" << server->errorString();
+         }
+         else
+         {
+             qDebug() << "Server created";
+         }
+    }
+    else
+    {
+        qDebug() << "Connected to server";
+        exitApp = true;
+        return;
+    }
+
     ui->setupUi(this);
+
+    /*timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(OnTimerFinish()));*/
 
     setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -79,11 +107,43 @@ ColorPanel::ColorPanel(QWidget *parent)
     connect(ui->toolbarHistoryColor5, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
     toolbarButtonIndex++;
     connect(ui->toolbarHistoryColor6, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
+
+    notification = new PopupNotification();
+
+    show();
 }
 
 ColorPanel::~ColorPanel()
 {
+    if(server)
+    {
+        server->close();
+        delete server;
+    }
+    if(client)
+    {
+        client->close();
+        delete client;
+    }
     delete ui;
+}
+
+void ColorPanel::OnNewClientConnection()
+{
+    QLocalSocket * socket = server->nextPendingConnection();
+    if(!restoreAfterPick)
+    {
+        //QTimer::singleShot(100, this, SLOT(OnTimerFinish()));
+        showMinimized();
+        showNormal();
+    }
+    socket->close();
+}
+
+void ColorPanel::OnTimerFinish()
+{
+    showMinimized();
+    showNormal();
 }
 
 void ColorPanel::CreateTrayActions()
@@ -127,6 +187,11 @@ void ColorPanel::trayActivated(QSystemTrayIcon::ActivationReason reason)
 
 void ColorPanel::ShowPickerWindows()
 {
+    if(!isHidden())
+    {
+        restoreAfterPick = true;
+    }
+    hide();
     int screenCount = QGuiApplication::screens().count();
     if(screenCount > pickerWindows->count())
     {
@@ -182,7 +247,7 @@ void ColorPanel::ColorPicked(QColor color)
     FillHistory();
     FillToolbarHistory();
 
-    ShowNotification("Color copied to clipboard", GetColorString(color));
+    ShowNotification("Color copied to clipboard: " + GetColorString(color));
 }
 
 void ColorPanel::PickerCancelled()
@@ -192,6 +257,11 @@ void ColorPanel::PickerCancelled()
         ColorPicker *picker = pickerWindows->at(wIndex);
         picker->hide();
     }
+    if(restoreAfterPick)
+    {
+        show();
+        restoreAfterPick = false;
+    }
 }
 
 void ColorPanel::ColorPickedFromHistory(QColor color)
@@ -199,7 +269,7 @@ void ColorPanel::ColorPickedFromHistory(QColor color)
     //qDebug() << "Picked from history: " << GetColorString(color);
     QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText(GetColorString(color));
-    ShowNotification("Color copied to clipboard", GetColorString(color));
+    ShowNotification("Color copied to clipboard: " + GetColorString(color));
 }
 
 void ColorPanel::ColorPickedFromToolbar(int index)
@@ -210,7 +280,7 @@ void ColorPanel::ColorPickedFromToolbar(int index)
         QColor color = colorPickerHistory->history->at((colorPickerHistory->history->count()-1) - index);
         QClipboard *clipboard = QGuiApplication::clipboard();
         clipboard->setText(GetColorString(color));
-        ShowNotification("Color copied to clipboard", GetColorString(color));
+        ShowNotification("Color copied to clipboard: " + GetColorString(color));
     }
 }
 
@@ -262,17 +332,19 @@ void ColorPanel::on_toggleWindowMode_clicked()
 {
     toolbarMode = !toolbarMode;
     UpdateWindowMode();
+    FillHistory();
 }
 
 void ColorPanel::on_pickColorButton_clicked()
 {
-    hide();
-    restoreAfterPick = true;
     ShowPickerWindows();
 }
 
 void ColorPanel::FillHistory()
 {
+    historyColumns = ui->scrollAreaWidgetContentsHistory->width() / (32 + 6);
+    qDebug() << "Columns: " << historyColumns << " width: " << ui->scrollAreaWidgetContentsHistory->width();
+
     QGridLayout * layout = new QGridLayout();
 
     int row;
@@ -314,7 +386,7 @@ void ColorPanel::FillHistory()
     }
 
     QSpacerItem * spacer = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding);
-    layout->addItem(spacer, row, column+1, 1, -1, Qt::AlignTop);
+    layout->addItem(spacer, row, historyColumns+1, 1, -1, Qt::AlignTop);
 
     delete ui->scrollAreaWidgetContentsHistory->layout();
     qDeleteAll(ui->scrollAreaWidgetContentsHistory->children());
@@ -369,9 +441,10 @@ void ColorPanel::FillToolbarHistory()
     }
 }
 
-void ColorPanel::ShowNotification(QString title, QString message)
+void ColorPanel::ShowNotification(QString message)
 {
-    sysTray->showMessage(title, message, QSystemTrayIcon::Information, 2000);
+    notification->setPopupText(message);
+    notification->show();
 }
 
 QString ColorPanel::GetColorString(QColor color)
@@ -436,10 +509,23 @@ void ColorPanel::on_stayOnTopButton_toggled(bool checked)
 
 void ColorPanel::on_clearHistoryButton_clicked()
 {
-    colorPickerHistory->Clear();
-    FillHistory();
-    FillToolbarHistory();
-    colorPickerHistory->SaveHistory();
+    QMessageBox confirmation;
+    confirmation.setText("Clear history");
+    confirmation.setInformativeText("Do you want to clear the history?");
+    confirmation.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    confirmation.setDefaultButton(QMessageBox::Cancel);
+    int confirmationReturn = confirmation.exec();
+    switch (confirmationReturn) {
+      case QMessageBox::Ok:
+            colorPickerHistory->Clear();
+            FillHistory();
+            FillToolbarHistory();
+            colorPickerHistory->SaveHistory();
+          break;
+      default:
+          // should never be reached
+          break;
+    }
 }
 
 void ColorPanel::on_colorFormatSelector_currentIndexChanged(int index)

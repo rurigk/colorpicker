@@ -705,7 +705,14 @@ color: white;</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QWidget" name="palettesHeader" native="true"/>
+                 <widget class="QWidget" name="palettesHeader" native="true">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -754,7 +761,7 @@ color: white;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>473</width>
+                     <width>946</width>
                      <height>356</height>
                     </rect>
                    </property>
@@ -769,6 +776,12 @@ color: white;</string>
                 </item>
                 <item>
                  <widget class="QScrollArea" name="scrollArea_2">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="widgetResizable">
                    <bool>true</bool>
                   </property>
@@ -777,8 +790,8 @@ color: white;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>473</width>
-                     <height>356</height>
+                     <width>16</width>
+                     <height>339</height>
                     </rect>
                    </property>
                    <property name="sizePolicy">

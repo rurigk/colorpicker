@@ -23,7 +23,7 @@ public:
     void SaveHistory();
     void Clear();
 private:
-    int historyMaxLenght = 49;
+    int historyMaxLenght = 100;
 };
 
 #endif // COLORPICKERHISTORY_H

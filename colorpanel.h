@@ -2,9 +2,12 @@
 #define COLORPANEL_H
 
 #include <QMainWindow>
+#include <QLocalServer>
+#include <QLocalSocket>
 #include <QSystemTrayIcon>
 #include <QScreen>
 #include <QApplication>
+#include <QWindow>
 #include <QDesktopWidget>
 #include <QDebug>
 #include <QColor>
@@ -18,10 +21,13 @@
 #include <QSizePolicy>
 #include <QSpacerItem>
 #include <QSettings>
+#include <QMessageBox>
+#include <QTimer>
 #include "colorpicker.h"
 #include "stylesheethelper.h"
 #include "colorpickerhistory.h"
 #include "colorbutton.h"
+#include "popupnotification.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ColorPanel; }
@@ -34,6 +40,7 @@ class ColorPanel : public QMainWindow
 public:
     ColorPanel(QWidget *parent = nullptr);
     ~ColorPanel();
+    bool exitApp = false;
 
 private slots:
     void trayActivated(QSystemTrayIcon::ActivationReason reason);
@@ -46,6 +53,8 @@ private slots:
     void ColorUnhoveredFromHistory();
     void ColorPickedFromToolbar(int index);
     void PickerCancelled();
+    void OnNewClientConnection();
+    void OnTimerFinish();
 
     void on_stayOnTopButton_toggled(bool checked);
 
@@ -54,6 +63,10 @@ private slots:
     void on_colorFormatSelector_currentIndexChanged(int index);
 
 private:
+    QLocalSocket * client;
+    QLocalServer * server;
+    //QTimer * timer;
+
     Ui::ColorPanel *ui;
     
     QSettings * settings;
@@ -71,6 +84,8 @@ private:
     StylesheetHelper* toolbarButtonsDefaultStyle;
     StylesheetHelper* contentStyle;
 
+    PopupNotification * notification;
+
     bool toolbarMode = true;
     bool restoreAfterPick = false;
 
@@ -82,7 +97,7 @@ private:
     void UpdateWindowMode();
     void FillHistory();
     void FillToolbarHistory();
-    void ShowNotification(QString title, QString message);
+    void ShowNotification(QString message);
     QString GetColorString(QColor color);
 };
 #endif // COLORPANEL_H

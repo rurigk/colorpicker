@@ -4,7 +4,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-VERSION = 0.3.0.0
+VERSION = 0.5.0.0
 QMAKE_TARGET_COMPANY = Konkorp
 QMAKE_TARGET_PRODUCT = ColorPicker
 QMAKE_TARGET_DESCRIPTION = Desktop color picker

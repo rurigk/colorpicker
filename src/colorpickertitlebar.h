@@ -25,6 +25,7 @@ signals:
 private:
     bool draggingWindow = false;
     QPoint pressPos;
+    QPoint originalWindowPos;
     int snapDistance = 50;
 
     void mousePressEvent(QMouseEvent *event);

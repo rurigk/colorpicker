@@ -1,6 +1,7 @@
 #ifndef COLORPANEL_H
 #define COLORPANEL_H
 
+#include <math.h>
 #include <QMainWindow>
 #include <QLocalServer>
 #include <QLocalSocket>
@@ -65,7 +66,7 @@ private slots:
 private:
     QLocalSocket * client;
     QLocalServer * server;
-    //QTimer * timer;
+    QTimer * picketStartTimer;
 
     Ui::ColorPanel *ui;
     
@@ -93,6 +94,7 @@ private:
 
     void CreateTrayIcon();
     void CreateTrayActions();
+    void StartPicker();
     void ShowPickerWindows();
     void UpdateWindowMode();
     void FillHistory();

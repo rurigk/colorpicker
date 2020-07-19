@@ -23,7 +23,7 @@
    <string>ColorPanel</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="colorpicker.qrc">
+   <iconset resource="../colorpicker.qrc">
     <normaloff>:/images/tray-icon.png</normaloff>:/images/tray-icon.png</iconset>
   </property>
   <property name="styleSheet">
@@ -791,7 +791,7 @@ color: white;</string>
                      <x>0</x>
                      <y>0</y>
                      <width>16</width>
-                     <height>339</height>
+                     <height>342</height>
                     </rect>
                    </property>
                    <property name="sizePolicy">
@@ -828,12 +828,12 @@ color: white;</string>
   <customwidget>
    <class>ColorPickerTitlebar</class>
    <extends>QWidget</extends>
-   <header>colorpickertitlebar.h</header>
+   <header>src/colorpickertitlebar.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="colorpicker.qrc"/>
+  <include location="../colorpicker.qrc"/>
  </resources>
  <connections/>
 </ui>

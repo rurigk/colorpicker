@@ -3,6 +3,8 @@ QT       += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
+QMAKE_CXXFLAGS+= -std=c++11
+QMAKE_LFLAGS +=  -std=c++11
 
 VERSION = 0.5.0.0
 QMAKE_TARGET_COMPANY = Konkorp

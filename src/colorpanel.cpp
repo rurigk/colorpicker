@@ -17,6 +17,15 @@ ColorPanel::ColorPanel(QWidget *parent)
 
          if (!server->listen("KonkorpColorPicker")) {
              qDebug() << "Cannot create a server" << server->errorString();
+             qDebug() << "Clear old server and try again";
+             QLocalServer::removeServer("KonkorpColorPicker");
+             if (!server->listen("KonkorpColorPicker")) {
+                 qDebug() << "Cannot create a server: Check for permissions" << server->errorString();
+             }
+             else
+             {
+                 qDebug() << "Server created";
+             }
          }
          else
          {
@@ -32,8 +41,9 @@ ColorPanel::ColorPanel(QWidget *parent)
 
     ui->setupUi(this);
 
-    /*timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(OnTimerFinish()));*/
+    picketStartTimer = new QTimer(this);
+    picketStartTimer->setSingleShot(true);
+    connect(picketStartTimer, SIGNAL(timeout()), this, SLOT(OnTimerFinish()));
 
     setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -131,17 +141,10 @@ void ColorPanel::OnNewClientConnection()
     QLocalSocket * socket = server->nextPendingConnection();
     if(!restoreAfterPick)
     {
-        //QTimer::singleShot(100, this, SLOT(OnTimerFinish()));
         showMinimized();
         showNormal();
     }
     socket->close();
-}
-
-void ColorPanel::OnTimerFinish()
-{
-    showMinimized();
-    showNormal();
 }
 
 void ColorPanel::CreateTrayActions()
@@ -176,20 +179,30 @@ void ColorPanel::trayActivated(QSystemTrayIcon::ActivationReason reason)
         this->show();
         break;
     case QSystemTrayIcon::MiddleClick:
-        ShowPickerWindows();
+        StartPicker();
         break;
     default:
         ;
     }
 }
 
-void ColorPanel::ShowPickerWindows()
+void ColorPanel::OnTimerFinish()
+{
+    ShowPickerWindows();
+}
+
+void ColorPanel::StartPicker()
 {
     if(!isHidden())
     {
         restoreAfterPick = true;
     }
     hide();
+    picketStartTimer->start(100);
+}
+
+void ColorPanel::ShowPickerWindows()
+{
     int screenCount = QGuiApplication::screens().count();
     if(screenCount > pickerWindows->count())
     {
@@ -335,7 +348,7 @@ void ColorPanel::on_toggleWindowMode_clicked()
 
 void ColorPanel::on_pickColorButton_clicked()
 {
-    ShowPickerWindows();
+    StartPicker();
 }
 
 void ColorPanel::FillHistory()
@@ -345,8 +358,8 @@ void ColorPanel::FillHistory()
 
     QGridLayout * layout = new QGridLayout();
 
-    int row;
-    int column;
+    int row = 0;
+    int column = 0;
     int historyCount = colorPickerHistory->history->count();
     int historyCountNormalized = historyCount - 1;
     for (int i = historyCount - 1; i >= 0; i--) {
@@ -360,6 +373,7 @@ void ColorPanel::FillHistory()
         buttonStyle->SetRule(new QString("background-color"), new QString(currentColor.name(QColor::HexRgb)));
 
         row = (int)floor((historyCountNormalized - i)/historyColumns);
+
         column = (historyCountNormalized - i) % historyColumns;
         ColorButton * colorButton = new ColorButton();
         colorButton->setObjectName(QString("cSelector_%1").arg(i));
@@ -383,8 +397,10 @@ void ColorPanel::FillHistory()
         layout->addWidget(colorButton, row, column, Qt::AlignTop);
     }
 
+    qDebug() << "Row: " << row << " Column: " << historyColumns+1;
+
     QSpacerItem * spacer = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding);
-    layout->addItem(spacer, row, historyColumns-1, 1, -1, Qt::AlignTop);
+    layout->addItem(spacer, row, historyColumns+1, 1, -1, Qt::AlignTop);
 
     //delete ui->scrollAreaWidgetContentsHistory->layout();
     qDeleteAll(ui->scrollAreaWidgetContentsHistory->children());

@@ -77,4 +77,5 @@ int ColorPickerTitlebar::PointerToScreen(QPoint pointer)
             return sIndex;
         }
     }
+    return 0;
 }

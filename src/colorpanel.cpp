@@ -397,7 +397,7 @@ void ColorPanel::FillHistory()
         layout->addWidget(colorButton, row, column, Qt::AlignTop);
     }
 
-    qDebug() << "Row: " << row << " Column: " << historyColumns+1;
+    //qDebug() << "Row: " << row << " Column: " << historyColumns+1;
 
     QSpacerItem * spacer = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding);
     layout->addItem(spacer, row, historyColumns+1, 1, -1, Qt::AlignTop);

@@ -56,3 +56,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     colorpicker.qrc
+
+RC_ICONS = images/icons/icon.ico

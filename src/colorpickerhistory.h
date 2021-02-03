@@ -9,7 +9,6 @@
 #include <QJsonArray>
 #include <QJsonParseError>
 #include <QJsonValue>
-#include <QJsonValue>
 #include <QDebug>
 
 class ColorPickerHistory

@@ -27,6 +27,7 @@
 #include "colorpicker.h"
 #include "stylesheethelper.h"
 #include "colorpickerhistory.h"
+#include "colorpickertitlebar.h"
 #include "colorbutton.h"
 #include "popupnotification.h"
 
@@ -36,7 +37,7 @@ QT_END_NAMESPACE
 
 class ColorPanel : public QMainWindow
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     ColorPanel(QWidget *parent = nullptr);
@@ -58,10 +59,11 @@ private slots:
     void OnTimerFinish();
 
     void on_stayOnTopButton_toggled(bool checked);
-
     void on_clearHistoryButton_clicked();
-
     void on_colorFormatSelector_currentIndexChanged(int index);
+
+public slots:
+	void OnWindowMove();
 
 private:
     QLocalSocket * client;

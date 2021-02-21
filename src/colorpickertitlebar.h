@@ -21,6 +21,7 @@ public:
     void paintEvent(QPaintEvent *event);
 
 signals:
+	void OnWindowMove();
 
 private:
     bool draggingWindow = false;

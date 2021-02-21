@@ -77,9 +77,9 @@ ColorPanel::ColorPanel(QWidget *parent)
     toolbarStyle->SetRule(new QString("border-bottom-left-radius"), new QString("6px"));
 
     toolbarButtonsDefaultStyle = new StylesheetHelper();
-    toolbarButtonsDefaultStyle->SetRule(new QString("width"), new QString("30px"));
-    toolbarButtonsDefaultStyle->SetRule(new QString("height"), new QString("30px"));
-    toolbarButtonsDefaultStyle->SetRule(new QString("border"), new QString("1px solid transparent"));
+	toolbarButtonsDefaultStyle->SetRule(new QString("width"), new QString("32px"));
+	toolbarButtonsDefaultStyle->SetRule(new QString("height"), new QString("32px"));
+	toolbarButtonsDefaultStyle->SetRule(new QString("border"), new QString("1px solid rgba(255,255,255,0.1)"));
     toolbarButtonsDefaultStyle->SetRule(new QString("background-image"), new QString("url(:/images/outline.png)"));
     toolbarButtonsDefaultStyle->SetRule(new QString("background-repeat"), new QString("no-repeat"));
     toolbarButtonsDefaultStyle->SetRule(new QString("background-color"), new QString("transparent"));
@@ -117,6 +117,8 @@ ColorPanel::ColorPanel(QWidget *parent)
     connect(ui->toolbarHistoryColor6, &QPushButton::clicked, this, [this, toolbarButtonIndex]() {ColorPickedFromToolbar(toolbarButtonIndex);});
 
     notification = new PopupNotification();
+
+	connect(ui->toolbarMain, &ColorPickerTitlebar::OnWindowMove, this, &ColorPanel::OnWindowMove);
 
     show();
 }
@@ -306,11 +308,17 @@ void ColorPanel::ColorUnhoveredFromHistory()
     ui->colorLabel->setText("");
 }
 
+void ColorPanel::OnWindowMove()
+{
+	qDebug() << "OnWindowMove";
+	UpdateWindowMode();
+}
+
 void ColorPanel::UpdateWindowMode()
 {
     if(toolbarMode)
     {
-        resize(450, 40);
+		resize(450, 40);
         toolbarStyle->SetRule(new QString("border-top-left-radius"), new QString("6px"));
         toolbarStyle->SetRule(new QString("border-top-right-radius"), new QString("6px"));
         toolbarStyle->SetRule(new QString("border-bottom-right-radius"), new QString("6px"));
@@ -319,10 +327,11 @@ void ColorPanel::UpdateWindowMode()
         ui->toolbarMain->setStyleSheet(toolbarStyle->BuildStylesheet());
         ui->toolbarColorsContainer->show();
         ui->toolbarTitleContainer->hide();
+		ui->contentWidget->hide();
     }
     else
     {
-        resize(630, 400);
+		resize(630, 400);
         toolbarStyle->SetRule(new QString("border-top-left-radius"), new QString("6px"));
         toolbarStyle->SetRule(new QString("border-top-right-radius"), new QString("6px"));
         toolbarStyle->SetRule(new QString("border-bottom-right-radius"), new QString("0px"));
@@ -331,6 +340,7 @@ void ColorPanel::UpdateWindowMode()
         ui->toolbarMain->setStyleSheet(toolbarStyle->BuildStylesheet());
         ui->toolbarColorsContainer->hide();
         ui->toolbarTitleContainer->show();
+		ui->contentWidget->show();
     }
 }
 
@@ -427,8 +437,9 @@ void ColorPanel::FillToolbarHistory()
         buttonStyle->SetRule(new QString("height"), new QString("32px"));
 
         QColor currentColor = colorPickerHistory->history->at(i);
-        buttonStyle->SetRule(new QString("background-color"), new QString(currentColor.name(QColor::HexRgb)));
-        buttonStyle->SetRule(new QString("border"), new QString("1px solid " + currentColor.name(QColor::HexRgb)));
+		QColor currentColorLighter = currentColor.lighter(150);
+		buttonStyle->SetRule(new QString("background-color"), new QString(currentColor.name(QColor::HexRgb)));
+		buttonStyle->SetRule(new QString("border"), new QString("1px solid " + currentColorLighter.name(QColor::HexRgb)));
         int buttonIndex = (historyCount - 1) - i;
         switch (buttonIndex) {
             case 0:

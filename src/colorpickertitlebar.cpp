@@ -58,6 +58,8 @@ void ColorPickerTitlebar::mouseMoveEvent(QMouseEvent *event)
         windowPosition.setX(wx);
         windowPosition.setY(wy);
         window()->move(windowPosition);
+
+		emit OnWindowMove();
     }
 }
 

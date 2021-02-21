@@ -5,8 +5,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+	qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArray("0"));
 
-    QApplication::setQuitOnLastWindowClosed(false);
+	QApplication::setQuitOnLastWindowClosed(false);
 
     ColorPanel w;
     if(w.exitApp)

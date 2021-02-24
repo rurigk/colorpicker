@@ -27,8 +27,10 @@
     <normaloff>:/images/tray-icon.png</normaloff>:/images/tray-icon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: transparent;
-border-radius: 6px;</string>
+   <string notr="true">/*background-color: transparent;
+border-radius: 6px;*/
+
+background-color: blue;</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -59,10 +61,10 @@ border-radius: 6px;</string>
       <property name="spacing">
        <number>0</number>
       </property>
-      <item>
+      <item alignment="Qt::AlignTop">
        <widget class="ColorPickerTitlebar" name="toolbarMain" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -527,7 +529,7 @@ background-repeat: no-repeat;</string>
       <item>
        <widget class="QWidget" name="contentWidget" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Ignored" vsizetype="MinimumExpanding">
+         <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -783,7 +785,7 @@ color: white;</string>
                 <item>
                  <widget class="QScrollArea" name="scrollArea_2">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
+                   <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>

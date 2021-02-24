@@ -43,6 +43,7 @@ public:
     ColorPanel(QWidget *parent = nullptr);
     ~ColorPanel();
     bool exitApp = false;
+	QString GetColorString(QColor color);
 
 private slots:
     void trayActivated(QSystemTrayIcon::ActivationReason reason);
@@ -57,6 +58,7 @@ private slots:
     void PickerCancelled();
     void OnNewClientConnection();
     void OnTimerFinish();
+	void OnResizeTimerFinish();
 
     void on_stayOnTopButton_toggled(bool checked);
     void on_clearHistoryButton_clicked();
@@ -68,7 +70,9 @@ public slots:
 private:
     QLocalSocket * client;
     QLocalServer * server;
-    QTimer * picketStartTimer;
+	QTimer * pickerStartTimer;
+
+	QTimer * resizeTimer;
 
     Ui::ColorPanel *ui;
     
@@ -90,6 +94,7 @@ private:
     PopupNotification * notification;
 
     bool toolbarMode = true;
+	bool currentMode = false;
     bool restoreAfterPick = false;
 
     int historyColumns = 15;
@@ -102,6 +107,6 @@ private:
     void FillHistory();
     void FillToolbarHistory();
     void ShowNotification(QString message);
-    QString GetColorString(QColor color);
+
 };
 #endif // COLORPANEL_H

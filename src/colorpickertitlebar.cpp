@@ -15,9 +15,9 @@ void ColorPickerTitlebar::paintEvent(QPaintEvent *)
 
 void ColorPickerTitlebar::mousePressEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+	Q_UNUSED(event);
     pressPos = QCursor::pos();
-    originalWindowPos = window()->pos();
+	originalWindowPos = window()->pos();
     draggingWindow = true;
 }
 
@@ -28,9 +28,9 @@ void ColorPickerTitlebar::mouseReleaseEvent(QMouseEvent *)
 
 void ColorPickerTitlebar::mouseMoveEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+	Q_UNUSED(event);
     if(draggingWindow)
-    {
+	{
         QList<QScreen*> screens = QGuiApplication::screens();
         QPoint mousePos = QCursor::pos();
 

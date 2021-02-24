@@ -12,6 +12,8 @@ namespace Ui {
     class ColorPicker;
 }
 
+class ColorPanel;
+
 class ColorPicker : public QWidget
 {
     Q_OBJECT
@@ -22,6 +24,7 @@ public:
     void paintEvent(QPaintEvent *);
     QPixmap emptyPixmap = *new QPixmap();
     QPixmap backgroundPixmap;
+	ColorPanel * colorPanel;
 
 signals:
     void ColorPicked(QColor color);
@@ -37,8 +40,17 @@ private:
     QPoint *mousePos;
     QShortcut *shortcut;
     bool drawLens = false;
-    int rectSize = 100;
+	int rectSize = 150;
     int lensRectSize = 20;
+
+	int infoBoxWidth = rectSize + 1;
+	int infoBoxHeight = 25;
+
+	int infoBoxPosition = -1;
+	QPen penDefault;
+	QPen penTranslucentDark;
+
+	QColor translucentDark;
 };
 
 #endif // COLORPICKER_H

@@ -41,12 +41,12 @@ ColorPanel::ColorPanel(QWidget *parent)
 
     ui->setupUi(this);
 
-    picketStartTimer = new QTimer(this);
-    picketStartTimer->setSingleShot(true);
-    connect(picketStartTimer, SIGNAL(timeout()), this, SLOT(OnTimerFinish()));
+	pickerStartTimer = new QTimer(this);
+	pickerStartTimer->setSingleShot(true);
+	connect(pickerStartTimer, SIGNAL(timeout()), this, SLOT(OnTimerFinish()));
 
     setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
-    setAttribute(Qt::WA_TranslucentBackground);
+	setAttribute(Qt::WA_TranslucentBackground);
 
     settings = new QSettings("Konkorp", "ColorPicker");
     int colorFormatIndex = settings->value("picker/colorformat", 0).toInt();
@@ -61,6 +61,7 @@ ColorPanel::ColorPanel(QWidget *parent)
     for(int wIndex = 0; wIndex < screenCount; wIndex++)
     {
         ColorPicker *colorPicker = new ColorPicker();
+		colorPicker->colorPanel = this;
         connect(colorPicker, &ColorPicker::ColorPicked, this, &ColorPanel::ColorPicked);
         connect(colorPicker, &ColorPicker::PickerCancelled, this, &ColorPanel::PickerCancelled);
         colorPicker->setMouseTracking(true);
@@ -93,6 +94,10 @@ ColorPanel::ColorPanel(QWidget *parent)
     contentStyle->SetRule(new QString("border-bottom-left-radius"), new QString("6px"));
 
     ui->contentWidget->setStyleSheet(contentStyle->BuildStylesheet());
+
+	resizeTimer = new QTimer(this);
+	resizeTimer->setSingleShot(true);
+	connect(resizeTimer, SIGNAL(timeout()), this, SLOT(OnResizeTimerFinish()));
 
     UpdateWindowMode();
     //this->hide();
@@ -200,7 +205,7 @@ void ColorPanel::StartPicker()
         restoreAfterPick = true;
     }
     hide();
-    picketStartTimer->start(100);
+	pickerStartTimer->start(100);
 }
 
 void ColorPanel::ShowPickerWindows()
@@ -310,37 +315,62 @@ void ColorPanel::ColorUnhoveredFromHistory()
 
 void ColorPanel::OnWindowMove()
 {
-	qDebug() << "OnWindowMove";
+	UpdateWindowMode();
+}
+
+void ColorPanel::OnResizeTimerFinish()
+{
 	UpdateWindowMode();
 }
 
 void ColorPanel::UpdateWindowMode()
 {
+	QPoint wPos = window()->pos();
     if(toolbarMode)
-    {
-		resize(450, 40);
-        toolbarStyle->SetRule(new QString("border-top-left-radius"), new QString("6px"));
-        toolbarStyle->SetRule(new QString("border-top-right-radius"), new QString("6px"));
-        toolbarStyle->SetRule(new QString("border-bottom-right-radius"), new QString("6px"));
-        toolbarStyle->SetRule(new QString("border-bottom-left-radius"), new QString("6px"));
+	{
 
-        ui->toolbarMain->setStyleSheet(toolbarStyle->BuildStylesheet());
-        ui->toolbarColorsContainer->show();
-        ui->toolbarTitleContainer->hide();
-		ui->contentWidget->hide();
+		if(currentMode != toolbarMode || window()->width() != 450 || window()->height() != 40)
+		{
+			resize(450, 40);
+			toolbarStyle->SetRule(new QString("border-top-left-radius"), new QString("6px"));
+			toolbarStyle->SetRule(new QString("border-top-right-radius"), new QString("6px"));
+			toolbarStyle->SetRule(new QString("border-bottom-right-radius"), new QString("6px"));
+			toolbarStyle->SetRule(new QString("border-bottom-left-radius"), new QString("6px"));
+
+			ui->toolbarMain->setStyleSheet(toolbarStyle->BuildStylesheet());
+			ui->toolbarColorsContainer->show();
+			ui->toolbarTitleContainer->hide();
+			ui->contentWidget->hide();
+
+			currentMode = toolbarMode;
+			resize(450, 40);
+
+			resizeTimer->start(10);
+
+			qDebug() << "Resize:" << window()->width() << ":" << window()->height();
+		}
     }
     else
-    {
-		resize(630, 400);
-        toolbarStyle->SetRule(new QString("border-top-left-radius"), new QString("6px"));
-        toolbarStyle->SetRule(new QString("border-top-right-radius"), new QString("6px"));
-        toolbarStyle->SetRule(new QString("border-bottom-right-radius"), new QString("0px"));
-        toolbarStyle->SetRule(new QString("border-bottom-left-radius"), new QString("0px"));
+	{
+		if(currentMode != toolbarMode || window()->width() != 630 || window()->height() != 400)
+		{
+			toolbarStyle->SetRule(new QString("border-top-left-radius"), new QString("6px"));
+			toolbarStyle->SetRule(new QString("border-top-right-radius"), new QString("6px"));
+			toolbarStyle->SetRule(new QString("border-bottom-right-radius"), new QString("0px"));
+			toolbarStyle->SetRule(new QString("border-bottom-left-radius"), new QString("0px"));
 
-        ui->toolbarMain->setStyleSheet(toolbarStyle->BuildStylesheet());
-        ui->toolbarColorsContainer->hide();
-        ui->toolbarTitleContainer->show();
-		ui->contentWidget->show();
+			ui->toolbarMain->setStyleSheet(toolbarStyle->BuildStylesheet());
+			ui->toolbarColorsContainer->hide();
+			ui->toolbarTitleContainer->show();
+			ui->contentWidget->show();
+
+			currentMode = toolbarMode;
+			resize(630, 400);
+
+			resizeTimer->start(10);
+
+			qDebug() << "Resize:" << window()->width() << ":" << window()->height();
+		}
     }
 }
 
@@ -352,8 +382,9 @@ void ColorPanel::on_closeWidgetButton_clicked()
 void ColorPanel::on_toggleWindowMode_clicked()
 {
     toolbarMode = !toolbarMode;
-    UpdateWindowMode();
     FillHistory();
+	UpdateWindowMode();
+	UpdateWindowMode();
 }
 
 void ColorPanel::on_pickColorButton_clicked()

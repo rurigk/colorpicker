@@ -1,5 +1,6 @@
 #include "colorpicker.h"
 #include "ui_colorpicker.h"
+#include "colorpanel.h"
 
 ColorPicker::ColorPicker(QWidget *parent) :
     QWidget(parent),
@@ -12,6 +13,11 @@ ColorPicker::ColorPicker(QWidget *parent) :
     mousePos = new QPoint(-1, -1);
     shortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
     connect(shortcut, &QShortcut::activated, this, &ColorPicker::EscapeKeyPressed);
+
+	translucentDark = QColor(0, 0, 0, 180);
+
+	penDefault = QPen (Qt::black, 1);
+	penTranslucentDark = QPen (translucentDark, 1);
 }
 
 ColorPicker::~ColorPicker()
@@ -23,6 +29,11 @@ void ColorPicker::paintEvent(QPaintEvent *)
 {
     QPainter painter;
     painter.begin(this);
+
+	QFont defaultFont = painter.font();
+	float fontSize = defaultFont.pointSize() * (96 / screen()->logicalDotsPerInchX());
+	QFont scaledFont = QFont(defaultFont.family(), fontSize);
+	painter.setFont(scaledFont);
 
     painter.drawPixmap(0, 0,
                        backgroundPixmap.width(),
@@ -45,14 +56,44 @@ void ColorPicker::paintEvent(QPaintEvent *)
                         mousePos->y() - (rectSize / 2),
                         rectSize, rectSize);
         QImage image = backgroundPixmap.toImage();
-        QColor color = image.pixel(mousePos->x(), mousePos->y());
-        QPen penColor(color, 1);
-        //painter.setPen(penColor);
-        painter.drawRect(mousePos->x(),
-                        mousePos->y(),
-                        4, 4);
-        QPen penDefault(Qt::black, 1);
-        //painter.setPen(penDefault);
+		QColor color = image.pixel(mousePos->x(), mousePos->y());
+		QString colorString = colorPanel->GetColorString(color);
+		//QPen penColor(color, 1);
+		//painter.setPen(penColor);
+
+		// Draw the middle pixel selector box
+		painter.drawRect(mousePos->x(), mousePos->y(), 7, 7);
+
+		// Set the pen color to translucent black
+		painter.setPen(penDefault);
+
+		// Draw info box
+		if(infoBoxPosition == 1)
+		{
+			int startPositionX = mousePos->x() - (rectSize / 2);
+			int startPositionY = mousePos->y() - (rectSize / 2) - infoBoxHeight;
+			painter.fillRect(startPositionX, startPositionY, infoBoxWidth, infoBoxHeight, translucentDark);
+
+			painter.fillRect(startPositionX + 4, startPositionY + 4, 16, 16, color);
+
+			painter.setPen(QPen (Qt::white));
+			painter.drawText(startPositionX + 24, startPositionY + 16, colorString);
+		}
+		else if(infoBoxPosition == 2)
+		{
+			int startPositionX = mousePos->x() - (rectSize / 2);
+			int startPositionY = mousePos->y() + (rectSize / 2);
+			painter.fillRect(startPositionX, startPositionY, infoBoxWidth, infoBoxHeight, translucentDark);
+
+			painter.fillRect(startPositionX + 4, startPositionY + 4, 16, 16, color);
+
+			painter.setPen(QPen (Qt::white));
+			painter.drawText(startPositionX + 24, startPositionY + 16, colorString);
+		}
+
+
+		// Reset the pen color to black
+		painter.setPen(penDefault);
     }
 
     painter.end();
@@ -77,6 +118,10 @@ void ColorPicker::mouseMoveEvent(QMouseEvent * event)
                (mousePos->y() - (rectSize / 2)) - 50,
                rectSize + 100, rectSize + 100);
     }
+
+	infoBoxPosition = (mousePos->y() >= height() - infoBoxHeight - (rectSize / 2))?  1 : 2;
+
+	repaint();
 }
 
 void ColorPicker::mousePressEvent(QMouseEvent *event)

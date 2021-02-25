@@ -233,12 +233,11 @@ void ColorPanel::ShowPickerWindows()
         picker->resize(screenRect.width(), screenRect.height());
         picker->setFixedSize(screenRect.width(), screenRect.height());
 
-        QPixmap desktopImage = screen->grabWindow(QDesktopWidget().winId(),
+		QPixmap desktopImage = screen->grabWindow(QDesktopWidget().winId(),
                                                   screenRect.x(),
                                                   screenRect.y(),
                                                   screenRect.width(),
-                                                  screenRect.height());
-        picker->backgroundPixmap = desktopImage;
+		                                          screenRect.height());
 
         picker->show();
         picker->activateWindow();
@@ -261,11 +260,14 @@ void ColorPanel::ColorPicked(QColor color)
         show();
         restoreAfterPick = false;
     }
-    colorPickerHistory->PushToHistory(color);
-    FillHistory();
+
+	colorPickerHistory->PushToHistory(color);
+
+	FillHistory();
+
     FillToolbarHistory();
 
-    ShowNotification("Color copied to clipboard: " + GetColorString(color));
+	ShowNotification("Color copied to clipboard: " + GetColorString(color));
 }
 
 void ColorPanel::PickerCancelled()
@@ -423,6 +425,8 @@ void ColorPanel::FillHistory()
         colorButton->setStyleSheet(buttonStyle->BuildStylesheet());
         colorButton->setCursor(Qt::PointingHandCursor);
 
+		delete buttonStyle;
+
         connect(colorButton, &ColorButton::clicked, this, [this, currentColor]() {
             ColorPickedFromHistory(currentColor);
         });
@@ -443,7 +447,7 @@ void ColorPanel::FillHistory()
     QSpacerItem * spacer = new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding);
     layout->addItem(spacer, row, historyColumns+1, 1, -1, Qt::AlignTop);
 
-    //delete ui->scrollAreaWidgetContentsHistory->layout();
+	delete ui->scrollAreaWidgetContentsHistory->layout();
     qDeleteAll(ui->scrollAreaWidgetContentsHistory->children());
 
     ui->scrollAreaWidgetContentsHistory->setLayout(layout);
@@ -492,8 +496,10 @@ void ColorPanel::FillToolbarHistory()
                 ui->toolbarHistoryColor6->setStyleSheet(buttonStyle->BuildStylesheet());
             break;
             default:
+				delete buttonStyle;
                 return;
         }
+		delete buttonStyle;
     }
 }
 

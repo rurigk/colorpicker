@@ -49,6 +49,10 @@ void ColorPickerHistory::SaveHistory()
         file.write(jsonString);
         file.close();
     }
+
+	delete historyColorsArray;
+	delete jsonObject;
+	delete document;
 }
 
 void ColorPickerHistory::PushToHistory(QColor color)

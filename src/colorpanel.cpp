@@ -239,6 +239,7 @@ void ColorPanel::ShowPickerWindows()
                                                   screenRect.width(),
 		                                          screenRect.height());
 
+		picker->backgroundPixmap = desktopImage;
         picker->show();
         picker->activateWindow();
     }
@@ -327,7 +328,7 @@ void ColorPanel::OnResizeTimerFinish()
 
 void ColorPanel::UpdateWindowMode()
 {
-	QPoint wPos = window()->pos();
+	//QPoint wPos = window()->pos();
     if(toolbarMode)
 	{
 

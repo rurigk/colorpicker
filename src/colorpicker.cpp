@@ -9,8 +9,8 @@ ColorPicker::ColorPicker(QWidget *parent) :
 	ui->setupUi(this);
 	setCursor(Qt::BlankCursor);
 
-	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
-	//setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint);
+	//setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
+	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint);
 
 	setMouseTracking(true);
 	mousePos = new QPoint(-1, -1);

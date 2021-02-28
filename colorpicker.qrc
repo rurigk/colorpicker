@@ -10,5 +10,12 @@
         <file>images/thumbtack.png</file>
         <file>images/thumbtack-active.png</file>
         <file>images/trash.png</file>
+        <file>images/outline_inverted.png</file>
+        <file>themes/default.qss</file>
+        <file>images/cross-inverted.png</file>
+        <file>images/eye-dropper-inverted.png</file>
+        <file>images/thumbtack-inverted.png</file>
+        <file>images/window-maximize-inverted.png</file>
+        <file>images/bg.png</file>
     </qresource>
 </RCC>

@@ -9,10 +9,14 @@ class StylesheetHelper
 public:
     StylesheetHelper();
     QString BuildStylesheet();
+	void SetSelector(QString* selector);
     void SetRule(QString* rule, QString* value);
     void RemoveRule(QString* rule);
     QString GetValue(QString* rule);
 private:
+	QString * selector;
+	QString * selectorOpeningBrace = new QString("{\n");
+	QString * selectorCloseBrace = new QString("\n}");
     QMap<QString, QString> *rules;
 };
 

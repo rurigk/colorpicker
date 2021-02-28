@@ -45,7 +45,7 @@ ColorPanel::ColorPanel(QWidget *parent)
 	pickerStartTimer->setSingleShot(true);
 	connect(pickerStartTimer, SIGNAL(timeout()), this, SLOT(OnTimerFinish()));
 
-    setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+	setWindowFlags(Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
 	setAttribute(Qt::WA_TranslucentBackground);
 
     settings = new QSettings("Konkorp", "ColorPicker");
@@ -71,29 +71,11 @@ ColorPanel::ColorPanel(QWidget *parent)
     qDebug() << "Added " << screenCount << " screens, Total screens:" << pickerWindows->count();
 
     toolbarStyle = new StylesheetHelper();
-    toolbarStyle->SetRule(new QString("background-color"), new QString("#2D3136"));
-    toolbarStyle->SetRule(new QString("border-top-left-radius"), new QString("6px"));
-    toolbarStyle->SetRule(new QString("border-top-right-radius"), new QString("6px"));
-    toolbarStyle->SetRule(new QString("border-bottom-right-radius"), new QString("6px"));
-    toolbarStyle->SetRule(new QString("border-bottom-left-radius"), new QString("6px"));
+	toolbarStyle->SetSelector(new QString("#toolbarMain"));
 
-    toolbarButtonsDefaultStyle = new StylesheetHelper();
-	toolbarButtonsDefaultStyle->SetRule(new QString("width"), new QString("32px"));
-	toolbarButtonsDefaultStyle->SetRule(new QString("height"), new QString("32px"));
-	toolbarButtonsDefaultStyle->SetRule(new QString("border"), new QString("1px solid rgba(255,255,255,0.1)"));
-    toolbarButtonsDefaultStyle->SetRule(new QString("background-image"), new QString("url(:/images/outline.png)"));
-    toolbarButtonsDefaultStyle->SetRule(new QString("background-repeat"), new QString("no-repeat"));
-    toolbarButtonsDefaultStyle->SetRule(new QString("background-color"), new QString("transparent"));
+	qDebug() << toolbarStyle->BuildStylesheet();
 
-    contentStyle = new StylesheetHelper();
-    contentStyle->SetRule(new QString("background-color"), new QString("#EEE"));
-    contentStyle->SetRule(new QString("border"), new QString("1px solid #CCC"));
-    contentStyle->SetRule(new QString("border-top-left-radius"), new QString("0px"));
-    contentStyle->SetRule(new QString("border-top-right-radius"), new QString("0px"));
-    contentStyle->SetRule(new QString("border-bottom-right-radius"), new QString("6px"));
-    contentStyle->SetRule(new QString("border-bottom-left-radius"), new QString("6px"));
-
-    ui->contentWidget->setStyleSheet(contentStyle->BuildStylesheet());
+	toolbarButtonsDefaultStyle = new StylesheetHelper();
 
 	resizeTimer = new QTimer(this);
 	resizeTimer->setSingleShot(true);
@@ -332,9 +314,9 @@ void ColorPanel::UpdateWindowMode()
     if(toolbarMode)
 	{
 
-		if(currentMode != toolbarMode || window()->width() != 450 || window()->height() != 40)
+		if(currentMode != toolbarMode || window()->width() != 450 || window()->height() != 48)
 		{
-			resize(450, 40);
+			resize(450, 48);
 			toolbarStyle->SetRule(new QString("border-top-left-radius"), new QString("6px"));
 			toolbarStyle->SetRule(new QString("border-top-right-radius"), new QString("6px"));
 			toolbarStyle->SetRule(new QString("border-bottom-right-radius"), new QString("6px"));
@@ -346,7 +328,7 @@ void ColorPanel::UpdateWindowMode()
 			ui->contentWidget->hide();
 
 			currentMode = toolbarMode;
-			resize(450, 40);
+			resize(450, 48);
 
 			resizeTimer->start(10);
 
@@ -457,23 +439,13 @@ void ColorPanel::FillHistory()
 
 void ColorPanel::FillToolbarHistory()
 {
-    QString defaultStyle = toolbarButtonsDefaultStyle->BuildStylesheet();
-    ui->toolbarHistoryColor1->setStyleSheet(defaultStyle);
-    ui->toolbarHistoryColor2->setStyleSheet(defaultStyle);
-    ui->toolbarHistoryColor3->setStyleSheet(defaultStyle);
-    ui->toolbarHistoryColor4->setStyleSheet(defaultStyle);
-    ui->toolbarHistoryColor5->setStyleSheet(defaultStyle);
-    ui->toolbarHistoryColor6->setStyleSheet(defaultStyle);
-
     int historyCount = colorPickerHistory->history->count();
     for (int i = historyCount - 1; i >= 0; i--) {
-        StylesheetHelper * buttonStyle = new StylesheetHelper();
-        buttonStyle->SetRule(new QString("border-radius"), new QString("6px"));
-        buttonStyle->SetRule(new QString("width"), new QString("32px"));
-        buttonStyle->SetRule(new QString("height"), new QString("32px"));
+		StylesheetHelper * buttonStyle = new StylesheetHelper();
 
         QColor currentColor = colorPickerHistory->history->at(i);
-		QColor currentColorLighter = currentColor.lighter(150);
+		QColor currentColorLighter = currentColor.darker(150);
+		buttonStyle->SetRule(new QString("background-image"), new QString("url()"));
 		buttonStyle->SetRule(new QString("background-color"), new QString(currentColor.name(QColor::HexRgb)));
 		buttonStyle->SetRule(new QString("border"), new QString("1px solid " + currentColorLighter.name(QColor::HexRgb)));
         int buttonIndex = (historyCount - 1) - i;

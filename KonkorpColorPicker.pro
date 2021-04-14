@@ -31,6 +31,8 @@ SOURCES += \
     src/main.cpp \
     src/colorpanel.cpp \
     src/popupnotification.cpp \
+    src/settingsdialog.cpp \
+    src/settingsmanager.cpp \
     src/stylesheethelper.cpp
 
 HEADERS += \
@@ -40,11 +42,14 @@ HEADERS += \
     src/colorpickerhistory.h \
     src/colorpickertitlebar.h \
     src/popupnotification.h \
+    src/settingsdialog.h \
+    src/settingsmanager.h \
     src/stylesheethelper.h
 
 FORMS += \
     src/colorpanel.ui \
-    src/colorpicker.ui
+    src/colorpicker.ui \
+    src/settingsdialog.ui
 
 TRANSLATIONS += \
     src/KonkorpColorPicker_en_US.ts

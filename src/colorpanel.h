@@ -30,6 +30,7 @@
 #include "colorpickertitlebar.h"
 #include "colorbutton.h"
 #include "popupnotification.h"
+#include "settingsdialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ColorPanel; }
@@ -92,6 +93,7 @@ private:
     StylesheetHelper* contentStyle;
 
     PopupNotification * notification;
+	SettingsDialog * settingsDialog;
 
     bool toolbarMode = true;
 	bool currentMode = false;

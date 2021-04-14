@@ -10,7 +10,7 @@
 	border-top-right-radius: 8px;
 	border-bottom-right-radius: 8px;
 	border-bottom-left-radius: 8px;
-	border: 1px solid #DDD;
+	border: 1px solid #eceefd;
 }
 
 /*
@@ -80,7 +80,8 @@ QScrollArea
 }
 
 QComboBox {
-	border: 1px solid #32414B;
+	background-color: rgba(255, 255, 255, 0.6);
+	border: 1px solid rgba(0, 0, 0, 0.1);
 	border-radius: 4px;
 	selection-background-color: #1464A0;
 	padding-left: 4px;

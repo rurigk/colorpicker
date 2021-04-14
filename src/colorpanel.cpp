@@ -41,6 +41,17 @@ ColorPanel::ColorPanel(QWidget *parent)
 
     ui->setupUi(this);
 
+	QFile defaultTheme(":/themes/default.qss");
+
+	if (!defaultTheme.exists())   {
+		printf("Unable to set stylesheet, file not found\n");
+	}
+	else   {
+		defaultTheme.open(QFile::ReadOnly | QFile::Text);
+		QTextStream ts(&defaultTheme);
+		setStyleSheet(ts.readAll());
+	}
+
 	pickerStartTimer = new QTimer(this);
 	pickerStartTimer->setSingleShot(true);
 	connect(pickerStartTimer, SIGNAL(timeout()), this, SLOT(OnTimerFinish()));
